@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wavelength - תדר (קבוצות)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            touch-action: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .spectrum-shadow {
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.3);
+        }
+        .mode-18-plus {
+            background: linear-gradient(to bottom right, #2a0a0a, #110000);
+        }
+        .mode-18-plus .concept-card {
+            border-color: #ef4444; 
+            background-color: #1f1f1f;
+            color: #fca5a5;
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+        }
+        .mode-18-plus .text-cyan-400 {
+            color: #f87171; 
+            text-shadow: 0 0 5px rgba(248, 113, 113, 0.5);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .floating-icon {
+            animation: float 6s ease-in-out infinite;
+        }
+        /* New Styles for Setup */
+        .setup-option.selected {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+        .active-turn {
+            border-color: #fbbf24; /* Amber border */
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body id="mainBody" class="bg-slate-800 text-white min-h-screen flex flex-col items-center justify-center p-2 overflow-hidden transition-colors duration-700 relative">
+
+    <!-- Adult Mode Decorations (Hidden by default) -->
+    <div id="adultDecorations" class="absolute inset-0 pointer-events-none hidden z-0 overflow-hidden">
+        <!-- Decoration Icons (Same as before) -->
+        <div class="absolute top-[5%] right-[5%] text-red-600 opacity-20 transform rotate-12 floating-icon" style="animation-delay: 0s;">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor"><path d="M5.63 17.77c1.39 1.15 3.12 1.9 4.97 2.13 3.33.4 6.75-1.12 8.7-3.95 2.1-3.05 1.77-6.9-.5-9.6l-1.39 1.39c.63 1.34.87 2.87.58 4.4-.42 2.22-2.07 4.07-4.17 4.67-1.18.34-2.42.33-3.6-.04l-1.37 1.37c-.77.19-1.57.19-2.34-.04l-1.42 1.42c.18-.58.37-1.16.54-1.75zM19.95 4.05c-.32.32-.68.58-1.07.79l-1.38-1.38c.67-.17 1.37-.15 2.03.07.19.06.33.24.33.44v.08zM17.18.97c-.36.13-.7.31-1.02.53l-1.4-1.4c1.15-.22 2.36.03 3.32.7l-.9.17zM14.54 1.72l-2.9 2.9C8.36 2.76 4.34 3.79 2.06 7.4c-1.38 2.19-1.55 4.8-.62 7.08L6.5 9.42c-.22-1.2.04-2.45.72-3.47 1.25-1.87 3.49-2.67 5.59-2.1l1.73-1.73v-.4z"/></svg>
+        </div>
+        <div class="absolute top-[10%] left-[5%] text-slate-400 opacity-20 transform -rotate-12 floating-icon" style="animation-delay: 2s;">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4a4 4 0 0 0-4 4c0 1.9 1.3 3.5 3.1 3.9l1.1 2.3c-.1.6.1 1.2.5 1.6l2.5 2.5c.3.3.7.4 1.1.4.3 0 .7-.1.9-.3l1.1-1.1c1.3.9 3 1.2 4.6.8a4.01 4.01 0 0 0 2.8-5 4 4 0 0 0-5 2.8l-1.1 1.1-.9-.9 2.3-1.1c.4-1.8-.1-3.7-1.4-5.1C12.3 3.7 10.1 3.1 8.3 3.5L7.2 2.4c-.4-.4-1-.4-1.4 0L4.4 3.8c-.4.4-.4 1 0 1.4l1.1 1.1A4.04 4.04 0 0 0 6 4zm10.3 8.3c-.6.1-1.2.1-1.8-.1l1.8-1.8c1.3.1 2.5.7 3.3 1.7 1.4 1.8 1.1 4.4-.7 5.7s-4.4 1.1-5.7-.7c-1-1.3-1.1-3.1-.3-4.5l1.9-1.9c-.3.5-.4 1.1-.5 1.6.2 1.7 1.6 2.9 3.3 2.9.4 0 .9-.1 1.3-.2-.5-1.1-1.3-2-2.6-2.7zM6 9.5c-.8 0-1.5-.7-1.5-1.5S5.2 6.5 6 6.5s1.5.7 1.5 1.5S6.8 9.5 6 9.5z"/></svg>
+        </div>
+        <div class="absolute bottom-[5%] left-[10%] text-red-700 opacity-20 transform -rotate-45 floating-icon" style="animation-delay: 1s;">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="currentColor"><path d="M5.63 17.77c1.39 1.15 3.12 1.9 4.97 2.13 3.33.4 6.75-1.12 8.7-3.95 2.1-3.05 1.77-6.9-.5-9.6l-1.39 1.39c.63 1.34.87 2.87.58 4.4-.42 2.22-2.07 4.07-4.17 4.67-1.18.34-2.42.33-3.6-.04l-1.37 1.37c-.77.19-1.57.19-2.34-.04l-1.42 1.42c.18-.58.37-1.16.54-1.75zM19.95 4.05c-.32.32-.68.58-1.07.79l-1.38-1.38c.67-.17 1.37-.15 2.03.07.19.06.33.24.33.44v.08zM17.18.97c-.36.13-.7.31-1.02.53l-1.4-1.4c1.15-.22 2.36.03 3.32.7l-.9.17zM14.54 1.72l-2.9 2.9C8.36 2.76 4.34 3.79 2.06 7.4c-1.38 2.19-1.55 4.8-.62 7.08L6.5 9.42c-.22-1.2.04-2.45.72-3.47 1.25-1.87 3.49-2.67 5.59-2.1l1.73-1.73v-.4z"/></svg>
+        </div>
+        <div class="absolute bottom-[10%] right-[5%] text-slate-500 opacity-20 transform rotate-12 floating-icon" style="animation-delay: 3s;">
+            <svg width="90" height="90" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4a4 4 0 0 0-4 4c0 1.9 1.3 3.5 3.1 3.9l1.1 2.3c-.1.6.1 1.2.5 1.6l2.5 2.5c.3.3.7.4 1.1.4.3 0 .7-.1.9-.3l1.1-1.1c1.3.9 3 1.2 4.6.8a4.01 4.01 0 0 0 2.8-5 4 4 0 0 0-5 2.8l-1.1 1.1-.9-.9 2.3-1.1c.4-1.8-.1-3.7-1.4-5.1C12.3 3.7 10.1 3.1 8.3 3.5L7.2 2.4c-.4-.4-1-.4-1.4 0L4.4 3.8c-.4.4-.4 1 0 1.4l1.1 1.1A4.04 4.04 0 0 0 6 4zm10.3 8.3c-.6.1-1.2.1-1.8-.1l1.8-1.8c1.3.1 2.5.7 3.3 1.7 1.4 1.8 1.1 4.4-.7 5.7s-4.4 1.1-5.7-.7c-1-1.3-1.1-3.1-.3-4.5l1.9-1.9c-.3.5-.4 1.1-.5 1.6.2 1.7 1.6 2.9 3.3 2.9.4 0 .9-.1 1.3-.2-.5-1.1-1.3-2-2.6-2.7zM6 9.5c-.8 0-1.5-.7-1.5-1.5S5.2 6.5 6 6.5s1.5.7 1.5 1.5S6.8 9.5 6 9.5z"/></svg>
+        </div>
+    </div>
+
+    <!-- ==================== SETUP SCREEN ==================== -->
+    <div id="setupScreen" class="absolute inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-6 text-center">
+        <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-8">תדר</h1>
+        
+        <div class="bg-slate-800 p-6 rounded-2xl w-full max-w-md shadow-2xl border border-slate-700">
+            <h2 class="text-xl mb-4 font-bold text-slate-300">בחר מצב משחק</h2>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="setup-option border-2 border-slate-600 rounded-xl p-4 cursor-pointer hover:bg-slate-700 transition" id="optSingle">
+                    <div class="text-3xl mb-2">🤝</div>
+                    <div class="font-bold">משחק חופשי</div>
+                    <div class="text-xs text-slate-400">כולם ביחד, צוברים ניקוד משותף</div>
+                </div>
+                <div class="setup-option border-2 border-slate-600 rounded-xl p-4 cursor-pointer hover:bg-slate-700 transition" id="optTeams">
+                    <div class="text-3xl mb-2">🆚</div>
+                    <div class="font-bold">תחרות</div>
+                    <div class="text-xs text-slate-400">ראש בראש, תורות</div>
+                </div>
+            </div>
+
+            <!-- Team Inputs (Hidden by default) -->
+            <div id="teamInputs" class="hidden flex-col gap-3 mb-6 animate-fade-in">
+                <div>
+                    <label class="block text-right text-xs text-slate-400 mb-1 pr-1">שם קבוצה א'</label>
+                    <input type="text" id="teamAName" value="הכחולים" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white text-right focus:border-cyan-500 outline-none">
+                </div>
+                <div>
+                    <label class="block text-right text-xs text-slate-400 mb-1 pr-1">שם קבוצה ב'</label>
+                    <input type="text" id="teamBName" value="האדומים" class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 text-white text-right focus:border-cyan-500 outline-none">
+                </div>
+            </div>
+
+            <button id="startGameBtn" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transform active:scale-95 transition">
+                התחל משחק 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== GAME UI ==================== -->
+    <div id="gameUI" class="hidden flex-col items-center w-full max-w-lg">
+        
+        <!-- Secret Lock Button -->
+        <button id="secretLockBtn" class="absolute top-2 left-2 p-2 text-slate-600 hover:text-slate-400 opacity-50 hover:opacity-100 z-50">
+            🔒
+        </button>
+
+        <!-- Top Bar -->
+        <div class="w-full flex justify-between items-center mb-2 px-4 z-10 relative">
+            <h1 class="text-2xl font-bold text-cyan-400 transition-colors duration-500">תדר</h1>
+            
+            <!-- Sound Toggle -->
+            <button id="toggleSoundBtn" class="bg-slate-700 p-2 rounded-full hover:bg-slate-600 transition mx-2">
+                🔊
+            </button>
+
+            <!-- Dynamic Scoreboard Area -->
+            <div id="scoreboardArea" class="flex gap-2">
+                <!-- Will be populated by JS -->
+            </div>
+        </div>
+
+        <!-- The Game Device -->
+        <div class="relative w-full pt-12 pb-0 flex justify-center mb-2 z-10"> 
+            <div class="relative w-full aspect-[5/3.2] bg-slate-200 rounded-t-[12rem] shadow-2xl border-4 border-slate-400 overflow-visible flex justify-center items-end spectrum-shadow z-10">
+                <canvas id="gameCanvas" class="absolute top-0 left-0 w-full h-full cursor-grab active:cursor-grabbing" style="top: -60px; height: calc(100% + 60px);"></canvas>
+                <div class="absolute bottom-[-20px] w-12 h-12 bg-slate-400 rounded-full border-4 border-slate-500 z-50 shadow-md flex items-center justify-center">
+                    <div class="w-2 h-2 bg-slate-600 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div id="instructionText" class="text-slate-400 text-sm mb-2 h-6 text-center font-bold z-10 relative">
+            סובב את הטבעת (מעבר אינסופי) | גרור מחוג לניחוש
+        </div>
+
+        <!-- Concept Card -->
+        <div class="concept-card w-full bg-white text-slate-800 rounded-xl shadow-lg p-3 mb-4 flex justify-between items-center border-4 border-cyan-600 relative min-h-[90px] z-20 transition-colors duration-500">
+            <div class="text-center w-1/3 z-10">
+                <p id="leftConcept" class="text-lg font-bold text-blue-600 leading-tight">קר</p>
+            </div>
+            
+            <div class="w-px h-10 bg-slate-300 mx-2 opacity-50"></div>
+            
+            <div class="text-center w-1/3 z-10">
+                <p id="rightConcept" class="text-lg font-bold text-red-600 leading-tight">חם</p>
+            </div>
+
+            <!-- Center Badge -->
+            <div class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-slate-800 text-white rounded-full w-8 h-8 flex items-center justify-center text-xs font-bold border-2 border-white z-20 shadow-md">
+                VS
+            </div>
+            
+            <button id="refreshWordsBtn" class="absolute top-1 left-1 text-slate-300 hover:text-slate-500 p-1" title="החלף מילים בלבד">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Controls -->
+        <div class="w-full flex flex-col gap-3 z-20">
+            <!-- Row 1: Shutter & Score -->
+            <div class="grid grid-cols-2 gap-4">
+                <button id="toggleShutterBtn" class="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span class="text-2xl">👁️</span>
+                    <div class="text-right leading-tight">
+                        <div class="text-lg font-bold">פתח/סגור</div>
+                        <div class="text-xs font-normal opacity-80">תריס</div>
+                    </div>
+                </button>
+
+                <button id="scoreBtn" class="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                    <span class="text-2xl">🏆</span>
+                    <div>בדוק ניקוד</div>
+                </button>
+            </div>
+
+            <!-- Row 2: New Round (Full Width) -->
+            <button id="newRoundBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-95">
+                <span class="text-2xl">🔄</span>
+                <div class="text-lg font-bold">סיבוב חדש (החלף תור)</div>
+            </button>
+        </div>
+
+        <div id="messageArea" class="mt-4 h-8 text-center text-lg font-bold text-yellow-300 drop-shadow-md z-20 relative"></div>
+    </div>
+
+    <!-- Secret Keypad Modal -->
+    <div id="secretModal" class="fixed inset-0 bg-black/90 z-[100] hidden flex-col items-center justify-center p-4">
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-2xl border border-slate-600 w-full max-w-xs">
+            <h2 class="text-center text-xl font-bold mb-4 text-slate-200">הכנס קוד סודי</h2>
+            <div class="bg-slate-900 h-12 rounded-lg mb-4 flex items-center justify-center text-2xl tracking-widest text-emerald-400 font-mono border border-slate-700">
+                <span id="codeDisplay"></span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="1">1</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="2">2</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="3">3</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="4">4</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="5">5</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="6">6</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="7">7</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="8">8</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="9">9</button>
+                <button class="key-btn bg-red-900/50 p-4 rounded-lg font-bold text-xl active:bg-red-800 text-red-200" id="clearCodeBtn">C</button>
+                <button class="key-btn bg-slate-700 p-4 rounded-lg font-bold text-xl active:bg-slate-600" data-num="0">0</button>
+                <button class="key-btn bg-slate-600 p-4 rounded-lg font-bold text-xl" id="closeModalBtn">↩️</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Audio & Haptic ---
+        let audioCtx = null;
+        let isSoundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        function triggerHaptic(duration = 5) {
+            if (navigator.vibrate) navigator.vibrate(duration);
+        }
+        function playClickSound(pitch = 1.0) {
+            triggerHaptic(5);
+            if (!isSoundEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(800 * pitch, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100 * pitch, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.06);
+        }
+        function playShutterSound(isOpening) {
+            triggerHaptic(20);
+            if (!isSoundEnabled || !audioCtx) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            if (isOpening) {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(600, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.1);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } else {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.25);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+        }
+        function playShuffleSound() {
+             let count = 0;
+             const interval = setInterval(() => {
+                 playClickSound(0.5 + Math.random());
+                 count++;
+                 if (count >= 10) clearInterval(interval);
+             }, 30);
+        }
+        function playSuccessSound() {
+            if (!isSoundEnabled || !audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(554, audioCtx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(659, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+        }
+        
+        document.getElementById('toggleSoundBtn').addEventListener('click', () => {
+            isSoundEnabled = !isSoundEnabled;
+            document.getElementById('toggleSoundBtn').textContent = isSoundEnabled ? '🔊' : '🔇';
+            initAudio();
+        });
+        document.body.addEventListener('click', initAudio, { once: true });
+        document.body.addEventListener('touchstart', initAudio, { once: true });
+
+        // --- Game & Setup Logic ---
+        const setupScreen = document.getElementById('setupScreen');
+        const gameUI = document.getElementById('gameUI');
+        const optSingle = document.getElementById('optSingle');
+        const optTeams = document.getElementById('optTeams');
+        const teamInputs = document.getElementById('teamInputs');
+        const teamANameInput = document.getElementById('teamAName');
+        const teamBNameInput = document.getElementById('teamBName');
+        const startGameBtn = document.getElementById('startGameBtn');
+        const scoreboardArea = document.getElementById('scoreboardArea');
+
+        let gameMode = 'single'; // 'single' or 'teams'
+        let teamData = {
+            A: { name: 'קבוצה א', score: 0 },
+            B: { name: 'קבוצה ב', score: 0 }
+        };
+        let currentTurn = 'A'; // 'A' or 'B'
+
+        // Setup Screen Events
+        optSingle.addEventListener('click', () => {
+            gameMode = 'single';
+            optSingle.classList.add('selected');
+            optTeams.classList.remove('selected');
+            teamInputs.classList.add('hidden');
+            teamInputs.classList.remove('flex');
+        });
+
+        optTeams.addEventListener('click', () => {
+            gameMode = 'teams';
+            optTeams.classList.add('selected');
+            optSingle.classList.remove('selected');
+            teamInputs.classList.remove('hidden');
+            teamInputs.classList.add('flex');
+        });
+
+        // Initialize Selection
+        optSingle.click();
+
+        startGameBtn.addEventListener('click', () => {
+            // Retrieve names if teams
+            if (gameMode === 'teams') {
+                teamData.A.name = teamANameInput.value || 'קבוצה א';
+                teamData.B.name = teamBNameInput.value || 'קבוצה ב';
+            }
+            
+            // Hide setup, show game
+            setupScreen.classList.add('hidden');
+            gameUI.classList.remove('hidden');
+            gameUI.classList.add('flex');
+            
+            updateScoreboardDisplay();
+            resize();
+            startNewRound();
+        });
+
+        function updateScoreboardDisplay() {
+            scoreboardArea.innerHTML = ''; // Clear previous
+
+            if (gameMode === 'single') {
+                // Just one score box
+                scoreboardArea.innerHTML = `
+                    <div class="bg-slate-700 px-3 py-1 rounded-lg border border-slate-600 flex flex-col items-center">
+                        <span class="text-xs text-slate-300">ניקוד</span>
+                        <span id="singleScoreDisplay" class="text-xl font-bold text-yellow-400">${totalScore}</span>
+                    </div>
+                `;
+            } else {
+                // Team A Box
+                const activeA = currentTurn === 'A' ? 'active-turn' : '';
+                const activeB = currentTurn === 'B' ? 'active-turn' : '';
+                
+                scoreboardArea.innerHTML = `
+                    <div class="bg-slate-700 px-3 py-1 rounded-lg border border-slate-600 flex flex-col items-center transition-all ${activeA}">
+                        <span class="text-xs text-blue-300">${teamData.A.name}</span>
+                        <span class="text-xl font-bold text-white">${teamData.A.score}</span>
+                    </div>
+                    <div class="text-slate-500 font-bold self-center">VS</div>
+                    <div class="bg-slate-700 px-3 py-1 rounded-lg border border-slate-600 flex flex-col items-center transition-all ${activeB}">
+                        <span class="text-xs text-red-300">${teamData.B.name}</span>
+                        <span class="text-xl font-bold text-white">${teamData.B.score}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Core Game Variables ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const messageArea = document.getElementById('messageArea');
+        const leftConceptEl = document.getElementById('leftConcept');
+        const rightConceptEl = document.getElementById('rightConcept');
+        const toggleShutterBtn = document.getElementById('toggleShutterBtn');
+        const newRoundBtn = document.getElementById('newRoundBtn');
+        const adultDecorations = document.getElementById('adultDecorations'); 
+
+        let width, height, centerX, centerY, radius;
+        
+        let dialAngle = 90;     
+        let targetAngle = 90;
+        let visualWheelRotation = 0; 
+        let shutterOpen = false; 
+        let shutterAnimVal = 0; 
+        let totalScore = 0; // For single player
+        
+        let isDraggingDial = false;
+        let isDraggingWheel = false;
+        let lastDragAngle = 0;
+        let isAdultMode = false; 
+
+        // --- CONCEPTS ---
+        const regularConcepts = [
+            // ... (All previous concepts)
+            ["קר", "חם"], ["טעים", "מגעיל"], ["חכם", "טיפש"], ["זול", "יקר"],
+            ["מיותר", "חיוני"], ["משעמם", "מרתק"], ["מוערך יתר", "מוערך בחסר"],
+            ["אכיל", "מעדן מלכים"], ["סרט גרוע", "סרט מעולה"], ["קשה", "קל"],
+            ["בריא", "לא בריא"], ["מסוכן", "בטוח"], ["פייק", "אמיתי"],
+            ["מכוער", "יפה"], ["זמני", "נצחי"], ["קרינג'", "מגניב"],
+            ["שקר לבן", "שקר גס"], ["תחביב", "אובססיה"], ["בזבוז זמן", "זמן איכות"],
+            ["קל לביצוע", "בלתי אפשרי"], ["פנטזיה", "מציאות"], ["חתול", "כלב"],
+            ["מתוק", "מלוח"], ["שנות ה-80", "שנות ה-2020"],
+            ["ביישן", "מוחצן"], ["סוד", "רכילות"], ["אמיץ", "פחדן"], ["נדיב", "קמצן"],
+            ["צנוע", "יהיר"], ["אופטימי", "פסימי"], ["רציני", "ליצן"], ["מנהיג", "מונהג"],
+            ["מסודר", "מבולגן"], ["רגוע", "לחוץ"], ["ספונטני", "מתוכנן"], ["רומנטי", "ציני"],
+            ["חברותי", "מתבודד"], ["סלחן", "נוטר טינה"], ["שמרן", "ליברל"], ["חרוץ", "עצלן"],
+            ["תמים", "ערמומי"], ["בוגר", "ילדותי"], ["רגיש", "אדיש"], ["נאמן", "בוגדני"],
+            ["ספר", "סרט"], ["הארי פוטר", "שר הטבעות"], ["מארוול", "DC"], ["ביטלס", "קווין"],
+            ["פופ", "רוק"], ["נטפליקס", "קולנוע"], ["טיקטוק", "אינסטגרם"], ["יוטיוב", "טלוויזיה"],
+            ["כדורגל", "כדורסל"], ["ריאליטי", "דוקו"], ["סיינפלד", "חברים"], ["נועה קירל", "סטטיק"],
+            ["פיצה", "המבורגר"], ["סושי", "שווארמה"], ["קפה", "תה"], ["יין", "בירה"],
+            ["שוקולד", "וניל"], ["במבה", "ביסלי"], ["חומוס", "טחינה"], ["פלאפל", "סביח"],
+            ["אהבה", "כסף"], ["גורל", "בחירה חופשית"], ["מדע", "אמונה"], ["טבע", "טכנולוגיה"],
+            ["צדק", "רחמים"], ["חופש", "ביטחון"], ["אמת כואבת", "שקר מנחם"], ["תהליך", "תוצאה"],
+            ["כמות", "איכות"], ["עבר", "עתיד"], ["רגש", "היגיון"], ["תיאוריה", "מעשה"],
+            ["אינדיבידואל", "חברה"], ["מסורת", "קדמה"], ["גוף", "נפש"], ["חלום", "מציאות"],
+            ["מקלחת בוקר", "מקלחת ערב"], ["קיץ", "חורף"], ["ים", "בריכה"], ["כלים", "כביסה"],
+            ["בוקר", "לילה"], ["שיחת טלפון", "הודעת טקסט"], ["אנדרואיד", "אייפון"], ["PC", "קונסולה"],
+            ["נהיגה", "תחבורה ציבורית"], ["מעלית", "מדרגות"], ["מזומן", "אשראי"], ["עט", "עיפרון"],
+            ["מחברת", "מחשב"], ["ג'ינס", "טרנינג"], ["סנדלים", "נעליים"], ["מטריה", "מעיל"],
+            ["לעוף", "להיות רואה ואינו נראה"], ["לקרוא מחשבות", "לראות את העתיד"],
+            ["לחיות לנצח", "למות צעיר ומפורסם"], ["זומבים", "חייזרים"],
+            ["רובוט משתלט", "אסון טבע"], ["להיתקע על אי בודד", "להיתקע במעלית"],
+            ["לזכות בלוטו", "למצוא אהבת אמת"], ["להיות הכי חכם", "להיות הכי יפה"],
+            ["לדבר עם חיות", "לדבר כל שפה"], ["חזרה בזמן", "קפיצה לעתיד"],
+            ["עיגול", "משולש"], ["אדום", "כחול"], ["חלק", "מחוספס"], ["רטוב", "יבש"],
+            ["עמוק", "רדוד"], ["חד", "קהה"], ["מהיר", "איטי"], ["רועש", "שקט"],
+            ["מואר", "חשוך"], ["כבד", "קל"], ["מלא", "ריק"], ["ישר", "עקום"],
+            ["גבוה", "נמוך"], ["רחב", "צר"], ["רך", "קשה"], ["גמיש", "שביר"],
+            ["מסריח", "ריחני"], ["דביק", "חלקלק"], ["שקוף", "אטום"], ["מוצק", "נוזל"],
+            ["סוציאליזם", "קפיטליזם"], ["דמוקרטיה", "דיקטטורה"], ["פסטה", "פיצה"], ["גלידה", "ארטיק"],
+            ["שמש", "ירח"], ["מדבר", "יער"], ["עיר", "כפר"], ["מטוס", "רכבת"], ["אופניים", "קורקינט"],
+            ["ספוטיפיי", "אפל מיוזיק"], ["חופשה בארץ", "חופשה בחו\"ל"], ["עבודה מהבית", "עבודה מהמשרד"],
+            ["אריה", "נמר"], ["דולפין", "כריש"], ["תפוח", "תפוז"], ["בננה", "תות"], ["אבטיח", "מלון"],
+            ["סתיו", "אביב"], ["גשם", "שמש"], ["שלג", "חול"], ["הר", "עמק"], ["נהר", "ים"],
+            ["בריכה", "ג'קוזי"], ["מסאז'", "ספא"], ["חדר כושר", "ריצה בחוץ"], ["יוגה", "פילאטיס"],
+            ["טניס", "פינג פונג"], ["שחייה", "ריצה"], ["אולימפיאדה", "מונדיאל"], ["ספר מתח", "ספר רומנטי"],
+            ["סרט אימה", "קומדיה"], ["דרמה", "פעולה"], ["ציור", "פיסול"], ["מוזיאון", "הופעה"],
+            ["תיאטרון", "קולנוע"], ["גיטרה", "פסנתר"], ["תופים", "כינור"], ["זמר", "להקה"],
+            ["מזרחית", "היפ הופ"], ["חדשות", "בידור"], ["פוליטיקה", "רכילות"], ["מדע", "היסטוריה"],
+            ["מתמטיקה", "ספרות"], ["פיזיקה", "ביולוגיה"], ["מחשב נייד", "מחשב נייח"], ["טאבלט", "קינדל"],
+            ["אוזניות", "רמקולים"], ["ווייפיי", "דאטה"], ["לינקדאין", "טינדר"], ["מייל", "מכתב"],
+            ["שיחת וידאו", "שיחה קולית"], ["הודעה קולית", "הודעה כתובה"], ["סמיילי", "גיף"],
+            ["סלפי", "תמונה רגילה"], ["פילטר", "טבעי"], ["סטורי", "פוסט"], ["לייק", "תגובה"],
+            ["עוקב", "חבר"], ["משפיען", "סלב"], ["ימין", "שמאל"], ["דת", "מדינה"], ["צבא", "אזרחות"],
+            ["תל אביב", "ירושלים"], ["אילת", "חרמון"], ["חריף", "מתוק"], ["סלט", "מרק"],
+            ["שניצל", "סטייק"], ["צ'יפס", "פירה"], ["אורז", "פסטה"], ["לחם", "פיתה"],
+            ["חמאה", "מרגרינה"], ["חלב", "שוקו"], ["מים", "מיץ"], ["קולה", "ספרייט"],
+            ["יין אדום", "יין לבן"], ["וויסקי", "וודקה"], ["קוקטייל", "צ'ייסר"],
+            ["דייט במסעדה", "דייט בבר"], ["סרט בבית", "סרט בקולנוע"], ["לישון כפיות", "לישון בנפרד"],
+            ["נשיקה בפה", "נשיקה בלחי"], ["חיבוק", "לחיצת יד"], ["מתנה", "כסף"], ["פרחים", "שוקולד"],
+            ["מכתב אהבה", "שיר אהבה"], ["הצעת נישואין פומבית", "אינטימית"], ["חתונה גדולה", "קטנה"],
+            ["ילדים", "כלבים"], ["דירה", "בית פרטי"], ["שכירות", "משכנתא"], ["אוטובוס", "רכבת"],
+            ["מונית", "רכב פרטי"], ["פקק", "כביש פתוח"], ["יום ראשון", "יום חמישי"],
+            ["סופ\"ש", "אמצע שבוע"], ["חג", "יום חול"], ["יום הולדת", "יום רגיל"],
+            ["רעש", "שקט"], ["אור", "חושך"], ["אש", "קרח"], ["אדמה", "רוח"], ["קפה שחור", "הפוך"]
+        ];
+
+        const adultConcepts = [
+            // ... (All previous adult concepts)
+            ["וניל", "BDSM"], ["סטוץ", "חתונה קתולית"], ["לבלוע", "לירוק"], ["אנאלי", "וגינלי"],
+            ["שלישייה", "מונוגמיה"], ["אזיקים", "חיבוקים"], ["נודס", "תמונת מחזור"],
+            ["בגידה", "יחסים פתוחים"], ["שולט", "נשלט"], ["גודל", "ביצועים"],
+            ["לגמור בפנים", "לגמור בחוץ"], ["חלק", "שעיר"], ["חוטיני", "תחתונים של סבתא"],
+            ["אורגזמה", "זיוף"], ["שוגר דאדי", "סטודנט תפרן"], ["אונלי פאנס", "ביטוח לאומי"],
+            ["ויאגרה", "טבעי"], ["דיק פיק", "זר פרחים"], ["מילף", "בתולה"], ["69", "מיסיונרי"],
+            ["דוגי", "כפיות"], ["דיבור מלוכלך", "שתיקה מביכה"], ["ספאנקינג", "מסאז'"],
+            ["סקס במטוס", "סקס במיטה"], ["ויברטור", "האצבעות"], ["לצלם", "להתחבא"],
+            ["אורגיה", "ארוחת ערב משפחתית"], ["למעלה", "למטה"], ["ציצים", "תחת"],
+            ["פורנו", "ערוץ הילדים"], ["להיות כבול", "להיות חופשי"], ["צעצועי מין", "כלי עבודה"],
+            ["סקס אוראלי", "נשיקה בפה"], ["מקלחת זהב*", "מקלחת רגילה"],
+            ["לכסות את העיניים", "לראות הכל"], ["מין קבוצתי", "סולו"],
+            ["דראג קווין", "נהג משאית"], ["קוק", "פפסי"], ["הריון לא רצוי", "זכייה בלוטו"],
+            ["מחלת מין", "שפעת"], ["מין בציבור", "בחדר סגור"], ["שיכור מת", "סאחי בלטה"],
+            ["ווק של בושה", "מצעד הגאווה"], ["חשפנית", "רקדנית בלט"], ["סמים קלים", "סמים קשים"],
+            ["שפחה", "מלכה"], ["אדון", "כלב"], ["קשירות", "חופש"], ["כאב", "עונג"],
+            ["שוט", "נוצה"], ["מסיכה", "גאג (Gag)"], ["כלוב", "מיטה"], ["רצועה", "קולר"],
+            ["לטקס", "תחרה"], ["עור", "משי"], ["רגליים", "ידיים"], ["פה", "כוס"],
+            ["זין", "דגדגן"], ["גמירה", "אורגזמה"], ["השפרצה", "יובש"], ["רטוב", "חלקלק"],
+            ["סיכה", "רוק"], ["קונדום", "בלי"], ["גלולה", "התקן"], ["מחזור", "ביוץ"],
+            ["טמפון", "פד"], ["פלאג", "חרוזים"], ["משאבה", "טבעת"], ["בובה", "אדם"],
+            ["פורנו", "ארוטיקה"], ["סרט כחול", "מציאות"], ["מצלמה", "מראה"], ["הצצה", "חשיפה"],
+            ["שלישייה", "רביעייה"], ["אורגיה המונית", "גאנג באנג*"], ["סווינגרס", "יחידים"],
+            ["נישואים", "גירושים"], ["רווק", "נשוי"], ["אלמנה", "גרושה"], ["זקן", "צעיר"],
+            ["שוגר דאדי", "שוגר בייבי"], ["קטינה (חוקית)", "בוגרת"], ["מורה", "תלמידה (בגירה)"],
+            ["רופא", "חולה"], ["שוטר", "עצירה"], ["בוס", "מזכירה"], ["שכן", "שכנה"],
+            ["שליח", "לקוחה"], ["אינסטלטור", "עקרת בית"], ["בייביסיטר", "אבא"],
+            ["אחות חורגת", "אח חורג"], ["בן דוד", "בת דודה"], ["יזיז", "סטוץ"],
+            ["אהבה", "סקס"], ["רומנטיקה", "זימה"], ["נשיקה", "מציצה"], ["ליקוק", "חדירה"],
+            ["אצבעות", "לשון"], ["יד", "פה"], ["רגליים", "בית שחי"], ["מסריח", "מבושם"],
+            ["שעיר", "חלק"], ["שמן", "רזה"], ["גבוה", "נמוך"], ["שרירי", "רופס"],
+            ["גדול", "קטן"], ["עבה", "דק"], ["ארוך", "קצר"], ["עקום", "ישר"],
+            ["נימול", "לא נימול"], ["שחור", "לבן"], ["אסיאתי", "לטיני"], ["ג'ינג'י", "בלונדיני"],
+            ["משקפיים", "עדשות"], ["קעקועים", "פירסינג"], ["עגיל בפטמה", "עגיל בדגדגן"],
+            ["נזם", "ספטום"], ["שיער ארוך", "קרחת"], ["זקן", "שפם"], ["איפור", "טבעי"],
+            ["סיליקון", "טבעי"], ["בוטוקס", "קמטים"], ["צעיר", "מבוגר"], ["בתולה", "מנוסה"],
+            ["זונה", "נזירה"], ["פורנוסטאר", "שחקנית"], ["דוגמנית", "צלמת"], ["מסאז'", "הרפיה"],
+            ["סאונה", "ג'קוזי"], ["מועדון", "בר"], ["שירותים", "מקלחת"], ["אוטו", "מיטה"],
+            ["חוף", "יער"], ["קולנוע", "פארק"], ["מעלית", "מדרגות"], ["גג", "מרתף"],
+            ["מטבח", "סלון"], ["שטיח", "פרקט"], ["ספה", "כורסה"], ["שולחן", "כיסא"],
+            ["דאבל פנטריישן*", "רגיל"], ["סקוורט", "יבש"], ["גמירה בחוץ", "גמירה בפנים"],
+            ["גמירה על הפנים*", "גמירה על הגוף"], ["גמירה בפה", "גמירה על החזה"],
+            ["מלוכלך", "נקי"], ["קינקי", "משעמם"], ["פטיש כפות רגליים", "פטיש בתי שחי"],
+            ["פטיש עור", "פטיש לטקס"], ["פטיש ניילון", "פטיש גומי"], ["גולדן שאוור*", "מקלחת"],
+            ["חניקה", "סטירות"], ["משיכה בשיער", "נשיכות"], ["שריטות", "סימנים כחולים"],
+            ["היקי", "נשיקה"], ["חרמנות", "אהבה"], ["זיון", "עשיית אהבה"],
+            ["מאחורה", "מקדימה"], ["בעמידה", "בשכיבה"], ["על הברכיים", "על הגב"],
+            ["סקס בוקר", "סקס לילה"], ["סקס מהיר", "סקס ארוך"], ["חמש דקות", "שעה"],
+            ["גניחות", "צרחות"], ["מילים מלוכלכות", "שתיקה"], ["'זונה שלי'", "'נסיכה שלי'"],
+            ["'אבא תעשה לי ילד'", "'אני גומרת'"], ["לאונן לבד", "לאונן ביחד"],
+            ["לאונן מול המראה", "לאונן בחושך"], ["ויברטור באוטובוס", "ויברטור בקולנוע"],
+            ["ללא תחתונים", "עם תחתונים"], ["חצאית מיני", "שמלה ארוכה"], ["מחשוף עמוק", "גולף"],
+            ["עקבים", "יחפה"], ["ליפסטיק אדום", "בלי איפור"], ["ציפורניים ארוכות", "קצרות"],
+            ["ריח של זיעה", "ריח של בושם"], ["אחרי מקלחת", "לפני מקלחת"],
+            ["פיסטינג*", "יד רגילה"], ["רימינג (ליקוק תחת)", "מציצה"], ["69 בעמידה", "69 בשכיבה"]
+        ];
+
+        let currentConcepts = regularConcepts;
+
+        // --- SECRET KEYPAD LOGIC (Same as before) ---
+        const secretLockBtn = document.getElementById('secretLockBtn');
+        const secretModal = document.getElementById('secretModal');
+        const codeDisplay = document.getElementById('codeDisplay');
+        const clearCodeBtn = document.getElementById('clearCodeBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const numBtns = document.querySelectorAll('.key-btn[data-num]');
+        
+        let enteredCode = "";
+
+        secretLockBtn.addEventListener('click', () => {
+            secretModal.classList.remove('hidden');
+            secretModal.classList.add('flex');
+            enteredCode = "";
+            updateCodeDisplay();
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            secretModal.classList.add('hidden');
+            secretModal.classList.remove('flex');
+        });
+
+        clearCodeBtn.addEventListener('click', () => {
+            enteredCode = "";
+            updateCodeDisplay();
+        });
+
+        numBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                playClickSound(1.5);
+                if (enteredCode.length < 4) {
+                    enteredCode += btn.dataset.num;
+                    updateCodeDisplay();
+                    checkCode();
+                }
+            });
+        });
+
+        function updateCodeDisplay() {
+            codeDisplay.textContent = "•".repeat(enteredCode.length);
+        }
+
+        function checkCode() {
+            if (enteredCode.length === 4) {
+                if (enteredCode === "6969") {
+                    activateAdultMode();
+                } else {
+                    codeDisplay.classList.add('text-red-500');
+                    setTimeout(() => {
+                        enteredCode = "";
+                        updateCodeDisplay();
+                        codeDisplay.classList.remove('text-red-500');
+                    }, 500);
+                }
+            }
+        }
+
+        function activateAdultMode() {
+            playSuccessSound();
+            isAdultMode = true;
+            currentConcepts = adultConcepts;
+            document.getElementById('mainBody').classList.add('mode-18-plus');
+            adultDecorations.classList.remove('hidden'); 
+            secretModal.classList.add('hidden');
+            secretModal.classList.remove('flex');
+            setTimeout(startNewRound, 500);
+        }
+
+        // --- Init & Resize (Same logic) ---
+        function resize() {
+            const container = canvas.parentElement;
+            if (!container) return; 
+            const rect = container.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) return;
+            canvas.width = rect.width * 2;
+            canvas.height = (rect.height + 60) * 2; 
+            width = canvas.width;
+            height = canvas.height;
+            centerX = width / 2;
+            centerY = height - 50; 
+            radius = Math.max(10, (width / 2) - 50); 
+            draw();
+        }
+        window.addEventListener('resize', resize);
+
+        function changeWords() {
+            const pair = currentConcepts[Math.floor(Math.random() * currentConcepts.length)];
+            leftConceptEl.textContent = pair[0];
+            rightConceptEl.textContent = pair[1];
+        }
+
+        function startNewRound() {
+            playShuffleSound();
+            changeWords();
+            
+            // Switch turns if teams
+            if (gameMode === 'teams') {
+                currentTurn = currentTurn === 'A' ? 'B' : 'A';
+                updateScoreboardDisplay();
+            }
+
+            targetAngle = Math.random() * 180;
+            snapFromEdge(); 
+            dialAngle = 90;
+            
+            if (shutterOpen) {
+                shutterOpen = false;
+                playShutterSound(false);
+                animateShutter();
+            } else {
+                draw();
+            }
+            
+            if (isAdultMode) {
+                messageArea.textContent = gameMode === 'teams' ? `תור ${teamData[currentTurn].name} (מצב 18+)` : "סיבוב חדש (מצב מבוגרים)";
+            } else {
+                messageArea.textContent = gameMode === 'teams' ? `תור ${teamData[currentTurn].name}` : "סיבוב חדש התחיל!";
+            }
+            // Clear message if no score
+            setTimeout(() => { if (!messageArea.textContent.includes('נקודות')) messageArea.textContent = ""; }, 2000);
+        }
+
+        function toggleShutter() {
+            shutterOpen = !shutterOpen;
+            playShutterSound(shutterOpen);
+            animateShutter();
+        }
+
+        function animateShutter() {
+            const targetVal = shutterOpen ? 1 : 0;
+            const step = 0.05;
+            function frame() {
+                let diff = targetVal - shutterAnimVal;
+                if (Math.abs(diff) < step) {
+                    shutterAnimVal = targetVal;
+                    draw();
+                    return;
+                }
+                shutterAnimVal += diff > 0 ? step : -step;
+                draw();
+                requestAnimationFrame(frame);
+            }
+            frame();
+        }
+
+        function snapFromEdge() {
+            const SAFE_MARGIN = 6; 
+            if (targetAngle < SAFE_MARGIN) {
+                animateTargetTo(SAFE_MARGIN + 0.5); 
+            } 
+            else if (targetAngle > 180 - SAFE_MARGIN) {
+                animateTargetTo(180 - SAFE_MARGIN - 0.5);
+            }
+        }
+
+        function animateTargetTo(newVal) {
+            let current = targetAngle;
+            let diff = newVal - current;
+            if (Math.abs(diff) > 20) { 
+                targetAngle = newVal;
+                draw();
+                return;
+            }
+            let steps = 10;
+            let stepVal = diff / steps;
+            let i = 0;
+            function step() {
+                targetAngle += stepVal;
+                draw();
+                i++;
+                if (i < steps) requestAnimationFrame(step);
+            }
+            step();
+        }
+
+        function checkScore() {
+            let diff = Math.abs(dialAngle - targetAngle);
+            if (diff > 90) diff = 180 - diff;
+            
+            let points = 0;
+            let msg = "";
+            
+            if (diff <= 4) { points = 4; msg = "בול פגיעה! (4 נקודות)"; }
+            else if (diff <= 12) { points = 3; msg = "קרוב מאוד! (3 נקודות)"; }
+            else if (diff <= 22) { points = 2; msg = "בכיוון (2 נקודות)"; }
+            else { msg = "פספוס..."; }
+            
+            if (!shutterOpen) toggleShutter();
+
+            // Add score to active player/team
+            if (gameMode === 'single') {
+                totalScore += points;
+            } else {
+                teamData[currentTurn].score += points;
+            }
+            
+            updateScoreboardDisplay();
+
+            messageArea.textContent = msg;
+            messageArea.style.transform = "scale(1.2)";
+            setTimeout(() => messageArea.style.transform = "scale(1)", 200);
+        }
+
+        function toRad(deg) { return deg * (Math.PI / 180); }
+
+        function draw() {
+            if (!width || !height || radius <= 0) return;
+            ctx.clearRect(0, 0, width, height);
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, Math.PI, 0); 
+            ctx.fillStyle = '#f1f5f9'; 
+            ctx.fill();
+            drawWrappingTarget();
+            drawBezels();
+            drawShutter();
+            drawWheelRim();
+            drawTicks();
+            drawDial();
+        }
+
+        function drawWrappingTarget() {
+            const w4 = 4; const w3 = 12; const w2 = 22;
+            function drawZone(widthDeg, color) {
+                let startG = targetAngle - widthDeg;
+                let endG = targetAngle + widthDeg;
+                let segments = [];
+                if (startG < 0) {
+                    segments.push({s: 0, e: endG});
+                    segments.push({s: 180 + startG, e: 180});
+                } else if (endG > 180) {
+                    segments.push({s: startG, e: 180});
+                    segments.push({s: 0, e: endG - 180});
+                } else {
+                    segments.push({s: startG, e: endG});
+                }
+                ctx.fillStyle = color;
+                segments.forEach(seg => {
+                    let r1 = 2 * Math.PI - toRad(seg.e);
+                    let r2 = 2 * Math.PI - toRad(seg.s);
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.arc(centerX, centerY, radius, r1, r2);
+                    ctx.fill();
+                });
+            }
+            drawZone(w2, '#fcd34d');
+            drawZone(w3, '#2dd4bf');
+            drawZone(w4, '#4f46e5');
+        }
+
+        function drawBezels() {
+            const bezelSize = 5; 
+            ctx.save();
+            ctx.fillStyle = '#cbd5e1'; 
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius + 1, 2 * Math.PI - toRad(bezelSize), 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius + 1, Math.PI, Math.PI + toRad(bezelSize));
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawShutter() {
+            const maxOffset = Math.PI; 
+            const currentOffset = shutterAnimVal * maxOffset; 
+            const start = Math.PI + currentOffset;
+            const end = start + Math.PI;
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, start, end);
+            ctx.fillStyle = '#cbd5e1'; 
+            ctx.fill();
+            ctx.strokeStyle = '#94a3b8';
+            ctx.stroke();
+            ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+            ctx.lineWidth = 2;
+            for(let i=10; i<170; i+=15) {
+                let r = start + toRad(i);
+                ctx.beginPath();
+                ctx.moveTo(centerX + Math.cos(r)*30, centerY + Math.sin(r)*30);
+                ctx.lineTo(centerX + Math.cos(r)*radius, centerY + Math.sin(r)*radius);
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawWheelRim() {
+            const rimInner = radius + 2;
+            const rimOuter = radius + 35;
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, rimOuter, Math.PI, 0);
+            ctx.arc(centerX, centerY, rimInner, 0, Math.PI, true);
+            ctx.closePath();
+            let grad;
+            if (isAdultMode) {
+                 grad = ctx.createLinearGradient(centerX - rimOuter, centerY, centerX + rimOuter, centerY);
+                grad.addColorStop(0, '#7f1d1d'); 
+                grad.addColorStop(0.5, '#b91c1c'); 
+                grad.addColorStop(1, '#7f1d1d');
+            } else {
+                 grad = ctx.createLinearGradient(centerX - rimOuter, centerY, centerX + rimOuter, centerY);
+                grad.addColorStop(0, '#f97316'); 
+                grad.addColorStop(0.5, '#fb923c'); 
+                grad.addColorStop(1, '#f97316');
+            }
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.strokeStyle = isAdultMode ? '#450a0a' : '#c2410c'; 
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+            ctx.lineWidth = 3;
+            for (let i = 0; i < 360; i+=15) {
+                const ang = toRad(i) + visualWheelRotation;
+                let norm = ang % (2*Math.PI);
+                if (norm < 0) norm += 2*Math.PI;
+                if (norm >= Math.PI - 0.1 && norm <= 2*Math.PI + 0.1) {
+                    const r1 = rimInner + 5;
+                    const r2 = rimOuter - 5;
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + Math.cos(ang)*r1, centerY + Math.sin(ang)*r1);
+                    ctx.lineTo(centerX + Math.cos(ang)*r2, centerY + Math.sin(ang)*r2);
+                    ctx.stroke();
+                }
+            }
+            ctx.restore();
+        }
+
+        function drawTicks() {
+            ctx.save();
+            ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+            ctx.lineWidth = 2;
+            for(let i=0; i<=180; i+=10) {
+                let r = Math.PI + toRad(i);
+                let len = (i % 90 === 0) ? 15 : 8;
+                ctx.beginPath();
+                ctx.moveTo(centerX + Math.cos(r)*radius, centerY + Math.sin(r)*radius);
+                ctx.lineTo(centerX + Math.cos(r)*(radius-len), centerY + Math.sin(r)*(radius-len));
+                ctx.stroke();
+            }
+            ctx.restore();
+        }
+
+        function drawDial() {
+            const angleRad = (2 * Math.PI) - toRad(dialAngle);
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,0.4)';
+            ctx.shadowBlur = 5;
+            ctx.shadowOffsetY = 3;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.lineTo(centerX + Math.cos(angleRad) * (radius-10), centerY + Math.sin(angleRad) * (radius-10));
+            ctx.strokeStyle = '#ef4444'; 
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 14, 0, Math.PI * 2);
+            ctx.fillStyle = isAdultMode ? '#7f1d1d' : '#b91c1c';
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function getMouseAngle(x, y) {
+            return Math.atan2(y, x);
+        }
+
+        function getDialAngleFromCoords(x, y) {
+            let rad = Math.atan2(y, x);
+            let deg = rad * (180 / Math.PI);
+            if (y > 0) return dialAngle; 
+            return Math.abs(deg);
+        }
+
+        function handleStart(e) {
+            e.preventDefault();
+            if (radius <= 0) return; 
+            const rect = canvas.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (cx - rect.left) * scaleX - centerX;
+            const y = (cy - rect.top) * scaleY - centerY;
+            const dist = Math.sqrt(x*x + y*y);
+            lastDragAngle = getMouseAngle(x, y);
+            if (dist > radius && dist < radius + 60) {
+                isDraggingWheel = true;
+                return;
+            }
+            if (dist <= radius) {
+                isDraggingDial = true;
+                dialAngle = getDialAngleFromCoords(x, y);
+                playClickSound(1.2);
+                draw();
+            }
+        }
+
+        function handleMove(e) {
+            if (radius <= 0) return;
+            const rect = canvas.getBoundingClientRect();
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (cx - rect.left) * scaleX - centerX;
+            const y = (cy - rect.top) * scaleY - centerY;
+            const currentAngle = getMouseAngle(x, y);
+            if (isDraggingWheel) {
+                let deltaRad = currentAngle - lastDragAngle;
+                if (deltaRad > Math.PI) deltaRad -= 2 * Math.PI;
+                if (deltaRad < -Math.PI) deltaRad += 2 * Math.PI;
+                visualWheelRotation += deltaRad;
+                let deltaDeg = deltaRad * (180 / Math.PI);
+                targetAngle -= deltaDeg;
+                if (targetAngle < 0) targetAngle += 180;
+                if (targetAngle > 180) targetAngle -= 180;
+                if (Math.abs(deltaDeg) > 2) {
+                     playClickSound(0.6 + Math.random()*0.2);
+                }
+                lastDragAngle = currentAngle;
+                draw();
+            } else if (isDraggingDial) {
+                let prevDial = dialAngle;
+                dialAngle = getDialAngleFromCoords(x, y);
+                if (Math.abs(dialAngle - prevDial) > 2) {
+                    playClickSound(1.2); 
+                }
+                draw();
+            }
+        }
+
+        function handleEnd() {
+            if (isDraggingWheel) {
+                snapFromEdge();
+            }
+            isDraggingDial = false;
+            isDraggingWheel = false;
+        }
+
+        canvas.addEventListener('mousedown', handleStart);
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+        canvas.addEventListener('touchstart', handleStart, {passive: false});
+        window.addEventListener('touchmove', handleMove, {passive: false});
+        window.addEventListener('touchend', handleEnd);
+
+        toggleShutterBtn.addEventListener('click', toggleShutter);
+        document.getElementById('refreshWordsBtn').addEventListener('click', changeWords);
+        document.getElementById('newRoundBtn').addEventListener('click', startNewRound);
+        document.getElementById('scoreBtn').addEventListener('click', checkScore);
+
+        resize();
+    </script>
+</body>
+</html>
